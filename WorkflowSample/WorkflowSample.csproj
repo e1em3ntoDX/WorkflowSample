@@ -20,4 +20,12 @@
         <PackageReference Include="System.Text.Json" Version="10.0.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Prompts\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Prompts\*.*" />
+    </ItemGroup>
+
 </Project>

@@ -3,7 +3,8 @@ using Azure.AI.OpenAI;
 using Microsoft.Extensions.AI;
 using WorkflowSample;
 
-const string AZURE_OPENAI_DEPLOYMENT = "gpt-4.1";
+const string DEPLOYMENT_GPT_4_1 = "gpt-4.1";
+const string DEPLOYMENT_GPT_5_MINI = "gpt-5-mini";
 
 Console.WriteLine($"{AnsiColors.Magenta}=== START ==={AnsiColors.Reset}");
 
@@ -13,10 +14,10 @@ var azureOpenAIApiKey = Environment.GetEnvironmentVariable("AZURE_OPENAI_API_KEY
                         ?? throw new InvalidOperationException("AZURE_OPENAI_API_KEY is not set.");
 
 Console.WriteLine($"{AnsiColors.Green}Using Azure OpenAI Endpoint: {azureOpenAIEndpoint}{AnsiColors.Reset}");
-Console.WriteLine($"{AnsiColors.Green}Using Deployment: {AZURE_OPENAI_DEPLOYMENT}{AnsiColors.Reset}");
+Console.WriteLine($"{AnsiColors.Green}Using Deployment: {DEPLOYMENT_GPT_5_MINI}{AnsiColors.Reset}");
 
 var azureClient = new AzureOpenAIClient(new Uri(azureOpenAIEndpoint), new ApiKeyCredential(azureOpenAIApiKey)); 
-var chatClient = azureClient.GetChatClient(AZURE_OPENAI_DEPLOYMENT).AsIChatClient();
+var chatClient = azureClient.GetChatClient(DEPLOYMENT_GPT_5_MINI).AsIChatClient();
 
 const string USER_PROMPT = """
                           I need a standard invoice for a client. At the top — the company logo, a large “Invoice” title, invoice number, issue date, and due date. On the left — client information (bill to), on the right — shipping address if different. 
