@@ -11,8 +11,7 @@ public static class AgentFactory {
                 Name = agentName,
                 Description = description,
                 ChatOptions = new ChatOptions {
-                        Instructions = agentPrompt,
-                        ResponseFormat = responseType != null ? ChatResponseFormat.ForJsonSchema(schema: AIJsonUtilities.CreateJsonSchema(responseType), schemaName: responseType.Name, schemaDescription: $"{responseType.Name} response schema") : null
+                        Instructions = agentPrompt
                     }
             };
 
