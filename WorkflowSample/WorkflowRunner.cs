@@ -4,7 +4,7 @@ using Microsoft.Agents.AI.Workflows;
 namespace WorkflowSample;
 
 public static class WorkflowRunner {
-    public async static Task<string> RunWorkflowAsync<TInput>(Workflow workflow, TInput input, Logger.LoggerOptions options, CancellationToken cancellationToken = default) {
+    public async static Task<string> RunWorkflowAsync<TInput>(Workflow workflow, TInput input, Logger.LoggerOptions? options = null, CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(workflow);
 
         string? result = null;
@@ -20,7 +20,7 @@ public static class WorkflowRunner {
         Logger.PrintTableHeader();
         
         await foreach (var evt in run.WatchStreamAsync(cancellationToken)) {
-            if(evt is AgentResponseUpdateEvent && options.SkipForEvents.Contains(evt.GetType()))
+            if(evt is AgentResponseUpdateEvent && options != null && options.SkipForEvents.Contains(evt.GetType()))
                 continue;
             
             var nowUtc = DateTime.UtcNow;
