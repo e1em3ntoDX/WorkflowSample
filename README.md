@@ -7,3 +7,12 @@ The sample to reproduce MS AI Workflow strange behaviour
 
 As shown in the screenshots, each executor starts and immediately finishes its execution one or two times before the actual meaningful run begins.
 This appears to be incorrect behavior.
+
+NOTE:
+
+You can filter logger messages with `LoggerOptions.SkipForEvents` property.
+
+That way:
+````cs
+var workflowResult = await WorkflowRunner.RunWorkflowAsync(workflow, USER_PROMPT, new Logger.LoggerOptions(){SkipForEvents = [typeof(AgentResponseUpdateEvent)]}).ConfigureAwait(false);
+````
