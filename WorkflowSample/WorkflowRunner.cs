@@ -16,7 +16,8 @@ public class WorkflowRunner {
         await using StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, input, cancellationToken: cancellationToken);
         await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
 
-        Logger.LogHeader(workflow.Name ?? "Workflow Run", DateTime.UtcNow);
+        Logger.PrintLogHeader(workflow.Name ?? "Workflow Run", DateTime.UtcNow);
+        Logger.PrintTableHeader();
         
         await foreach (var @event in run.WatchStreamAsync(cancellationToken)) {
             var nowUtc = DateTime.UtcNow;
@@ -55,7 +56,7 @@ public class WorkflowRunner {
             }
         }
 
-        Logger.LogFooter(workflow.Name ?? "Workflow Run", DateTime.UtcNow, stopwatch.Elapsed);
+        Logger.PrintLogFooter(workflow.Name ?? "Workflow Run", DateTime.UtcNow, stopwatch.Elapsed);
         
         return result ?? "Work flow result is null";
     }

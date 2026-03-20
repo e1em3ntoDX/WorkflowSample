@@ -4,24 +4,55 @@ namespace WorkflowSample;
 
 public static class Logger {
 
+    static Logger() {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+    }
+
+    public static void PrintTableHeader() {
+        Console.WriteLine(
+            Pad("TIME", 15) +
+            Pad("EVENT", 30) +
+            Pad("ELAPSED", 12) +
+            Pad("DELTA", 12) +
+            Pad("EXECUTOR", 25) +
+            Pad("DATA", 40)
+        );
+
+        Console.WriteLine(new string('-', 130));
+    }
+
     public static void LogWorkflowEvent( WorkflowEvent evt, DateTime nowUtc, TimeSpan elapsed, TimeSpan delta) {
+        const int TIME_W = 15;
+        const int EVENT_W = 30;
+        const int ELAPSED_W = 12;
+        const int DELTA_W = 12;
+        const int EXECUTOR_W = 25;
+        const int DATA_W = 40;
+        
+        var time = $"[{nowUtc:HH:mm:ss.fff}]";
         var eventName = evt.GetType().Name;
-        var executorId = TryGetExecutorId(evt);
-        var shortData = TryGetShortData(evt);
-        
-        Console.Write($"{AnsiColors.Gray}[{nowUtc:HH:mm:ss.fff} UTC]{AnsiColors.Reset}");
-        Console.Write($"{AnsiColors.Blue}{eventName}{AnsiColors.Reset}");
-        Console.Write($"{AnsiColors.Green} | +{elapsed.TotalMilliseconds,6:0} ms{AnsiColors.Reset}");
-        Console.Write($"{AnsiColors.Yellow} | delta: {delta.TotalMilliseconds,6:0} ms{AnsiColors.Reset}");
-        if (!string.IsNullOrWhiteSpace(executorId)) 
-            Console.Write($"{AnsiColors.Blue} | executor: {executorId}{AnsiColors.Reset}");
-        if (!string.IsNullOrWhiteSpace(shortData)) 
-            Console.Write($"{AnsiColors.Gray} | data: {shortData}{AnsiColors.Reset}");
-        if (evt is WorkflowErrorEvent workflowErrorEvent) 
-            Console.Write($"{AnsiColors.Red} | error: {workflowErrorEvent.Exception?.Message}{AnsiColors.Reset}");
-        if (evt is WorkflowWarningEvent workflowWarningEvent)
-            Console.Write($"{AnsiColors.Yellow} | warning: {workflowWarningEvent.Data}{AnsiColors.Reset}");
-        
+        var elapsedStr = $"+{elapsed.TotalMilliseconds:0} ms";
+        var deltaStr = $"Δ{delta.TotalMilliseconds:0} ms";
+        var executor = TryGetExecutorId(evt) ?? "";
+        var data = TryGetShortData(evt) ?? "";
+
+        var timeCol = Pad(time, TIME_W);
+        var eventCol = Pad(eventName, EVENT_W);
+        var elapsedCol = Pad(elapsedStr, ELAPSED_W);
+        var deltaCol = Pad(deltaStr, DELTA_W);
+        var executorCol = Pad(executor, EXECUTOR_W);
+        var dataCol = Pad(data, DATA_W);
+
+        Console.Write($"{AnsiColors.Gray}{timeCol}{AnsiColors.Reset}");
+        Console.Write($"{AnsiColors.Blue}{eventCol}{AnsiColors.Reset}");
+        Console.Write($"{AnsiColors.Green}{elapsedCol}{AnsiColors.Reset}");
+        Console.Write($"{AnsiColors.Yellow}{deltaCol}{AnsiColors.Reset}");
+        Console.Write($"{AnsiColors.Cyan}{executorCol}{AnsiColors.Reset}");
+        Console.Write($"{AnsiColors.Gray}{dataCol}{AnsiColors.Reset}");
+
+        if (evt is WorkflowErrorEvent err)
+            Console.Write($"{AnsiColors.Red} ERROR: {err.Exception?.Message}{AnsiColors.Reset}");
+
         Console.WriteLine();
     }
 
@@ -57,16 +88,26 @@ public static class Logger {
         return text.Length <= MAX ? text : string.Concat(text.AsSpan(0, MAX), "...");
     }
 
-    public static void LogHeader(string title, DateTime startedUtc) {
+    public static void PrintLogHeader(string title, DateTime startedUtc) {
         Console.WriteLine($"{AnsiColors.Magenta}=== RUN GENERATION ==={AnsiColors.Reset}");
         Console.WriteLine($"{AnsiColors.Magenta}=== {title} ==={AnsiColors.Reset}");
         Console.WriteLine($"{AnsiColors.Gray}[Started : {startedUtc:HH:mm:ss.fff} UTC]{AnsiColors.Reset}");
     }
 
-    public static void LogFooter( string title, DateTime startedAtUtc, TimeSpan elapsed) {
+    public static void PrintLogFooter( string title, DateTime startedAtUtc, TimeSpan elapsed) {
         Console.WriteLine($"{AnsiColors.Magenta}=== FINISH GENERATION ==={AnsiColors.Reset}");
         Console.WriteLine($"{AnsiColors.Magenta}=== {title} ==={AnsiColors.Reset}");
         Console.WriteLine($"{AnsiColors.Gray}Started : {startedAtUtc:yyyy-MM-dd HH:mm:ss.fff} UTC{AnsiColors.Reset}");
         Console.WriteLine($"{AnsiColors.Gray}Elapsed : {elapsed.TotalMilliseconds:0} ms{AnsiColors.Reset}");
+    }
+
+    static string Pad(string text, int width) {
+        if (string.IsNullOrEmpty(text))
+            return new string(' ', width);
+
+        if (text.Length > width)
+            return text[..(width - 3)] + "...";
+
+        return text.PadRight(width);
     }
 }
