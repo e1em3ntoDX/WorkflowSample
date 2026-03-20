@@ -27,6 +27,6 @@ const string USER_PROMPT = """
                           """;
 
 var workflow = WorkflowFactory.CreateWorkflow(chatClient, "Report Generation Workflow");
-var workflowResult = await WorkflowRunner.RunWorkflowAsync(workflow, USER_PROMPT).ConfigureAwait(false);
+var workflowResult = await WorkflowRunner.RunWorkflowAsync(workflow, USER_PROMPT, new Logger.LoggerOptions(){SkipForEvents = [typeof(AgentResponseUpdateEvent)]}).ConfigureAwait(false);
 
 ResultPrinter.Print(workflowResult);

@@ -12,8 +12,8 @@ public static class WorkflowFactory {
         // var thirdAgent = AgentFactory.CreateAgent(chatClient, "ThirdAgent", "You are third agent in workflow for generation enriched prompt", AgentsPrompts.FirstAgentSystem);
         
         var firstAgent = AgentFactory.CreateAgent(chatClient, "FirstAgent", string.Empty, AgentsPrompts.FirstAgentSystem);
-        var secondAgent = AgentFactory.CreateAgent(chatClient, "SecondAgent", string.Empty, AgentsPrompts.FirstAgentSystem);
-        var thirdAgent = AgentFactory.CreateAgent(chatClient, "ThirdAgent", string.Empty, AgentsPrompts.FirstAgentSystem);
+        var secondAgent = AgentFactory.CreateAgent(chatClient, "SecondAgent", string.Empty, AgentsPrompts.SecondAgentSystem);
+        var thirdAgent = AgentFactory.CreateAgent(chatClient, "ThirdAgent", string.Empty, AgentsPrompts.ThirdAgentSystem);
 
         var output = AgentFactory.CreateOutputExecutor();
 
