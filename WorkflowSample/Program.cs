@@ -6,7 +6,6 @@ using WorkflowSample;
 
 // Setup
 const string DEPLOYMENT_GPT_4_1 = "gpt-4.1";
-const string DEPLOYMENT_GPT_5_MINI = "gpt-5-mini";
 
 Console.WriteLine($"{AnsiColors.Magenta}=== START ==={AnsiColors.Reset}");
 

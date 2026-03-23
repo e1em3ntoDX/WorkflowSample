@@ -32,14 +32,10 @@ public static class AgentFactory {
         async ValueTask<string> HandleAsync(List<ChatMessage> messages, IWorkflowContext context, CancellationToken cancellationToken = default) {
             var lastMessage = FilterToLastMessage(messages);
 
-            if(lastMessage == null) {
-                await ValueTask.FromResult(string.Empty);
-            }
-
-            return lastMessage?.Text;
+            return lastMessage?.Text ?? string.Empty;
         }
 
-        private static ChatMessage FilterToLastMessage(List<ChatMessage> messages) {
+        private static ChatMessage? FilterToLastMessage(List<ChatMessage> messages) {
             return messages.LastOrDefault(m => m.Role == ChatRole.Assistant);
         }
 
